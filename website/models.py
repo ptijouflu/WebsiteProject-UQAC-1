@@ -10,7 +10,7 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(150), unique=True)
     password = db.Column(db.String(150))
     date_created = db.Column(db.DateTime(timezone=True), default=func.now())
-    # role = db.Column(db.String(150), default='reader')
+    # role = db.Column(db.String(150), default='reader'), futur implementation
     posts = db.relationship('Post', backref='user', passive_deletes=True)
     comments = db.relationship('Comment', backref='user', passive_deletes=True)
     likes = db.relationship('Like', backref='user', passive_deletes=True)
@@ -22,7 +22,7 @@ class Post(db.Model):
     text = db.Column(db.Text, nullable=False)
     date_created = db.Column(db.DateTime(timezone=True), default=func.now())
     author = db.Column(db.Integer, db.ForeignKey('user.id', ondelete="CASCADE"), nullable=False)
-    # visibility = db.relationship(db.Boolean, )
+    # visibility = db.Column(db.String(150), default='public'), futur implementation
     comments = db.relationship('Comment', backref='post', passive_deletes=True)
     likes = db.relationship('Like', backref='post', passive_deletes=True)
 
