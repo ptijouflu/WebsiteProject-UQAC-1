@@ -8,16 +8,23 @@ from flask_login import login_required, login_user
 from werkzeug.security import generate_password_hash
 
 
+# When we use "methods=['GET', 'POST']", GET method is for get informations (like user's informations, ...) 
+# and POST method is to make a modification (like create user or update user, ...)
+
+
+# Blueprint of users
 users = Blueprint("users", __name__)
 
 
+# Print user list
 @users.route('/users/list')
 @login_required
 def index():
-    user = User.query.all()
+    user = User.query.all() # Get all users
     return render_template('list_users.html', user=user)
 
 
+# Create user
 @users.route('/user/create', methods=['GET', 'POST'])
 @login_required
 def create():
@@ -30,6 +37,7 @@ def create():
         email_exists = User.query.filter_by(email=email).first() # Check if the email already exist
         username_exists = User.query.filter_by(username=username).first() # Check if username already exist
 
+        # All conditions to create an account
         if email_exists:
             flash("Email is already in use.", category='error')
         elif username_exists:
@@ -55,19 +63,21 @@ def create():
             db.session.add(new_user) # Add this new user to the database
             db.session.commit() # Refresh the database
             flash('User created!')
-            return redirect(url_for('users.index')) # Redirection to the home page
+            return redirect(url_for('users.index')) # Redirection to the user list page
 
     return render_template('create_user.html', user=current_user) # Print the sign-up html page
 
 
+# Information of the user
 @users.route('/user/show/<int:user_id>')
 @login_required
 def show(user_id):
     user = User.query.get(user_id)
-    print(user)
-    return render_template('show_user.html', user=user)
+    print(user) # Print user
+    return render_template('show_user.html', user=user) # Print the show user html page
 
 
+# Update user
 @users.route('/user/update/<int:user_id>', methods=['GET', 'POST'])
 @login_required
 def update(user_id):
@@ -75,29 +85,30 @@ def update(user_id):
     if request.method == 'POST':
         user.username = request.form['username']
         user.email = request.form['email']
-        db.session.commit()
+        db.session.commit() # Refresh the database
         flash("User " + user.username + " has been updated", category='success')
-        return redirect(url_for('users.index'))
-    return render_template('update_user.html', user=user)
+        return redirect(url_for('users.index')) # Redirection to the user list page
+    return render_template('update_user.html', user=user) # Print update user html page
 
 
+# Delete user
 @users.route('/user/destroy/<int:user_id>', methods=['GET', 'POST'])
 @login_required
 def destroy(user_id):
     user = User.query.get(user_id)
     if request.method == 'POST':
-        db.session.delete(user)
-        db.session.commit()
+        db.session.delete(user) # Delete user from the database
+        db.session.commit() # Refresh the database
         flash("User " + user.username + " has been deleted!", category='success')
-    return redirect(url_for('users.index'))
+    return redirect(url_for('users.index')) # Redirection to the user list page
 
 
-@users.route('/user/promute/<int:user_id>', methods=['GET', 'POST'])
-@login_required
-def promute(user_id):
-    user = User.query.get(user_id)
-    if request.method == 'POST':
-        user.promute = True
-        db.session.commit()
-        flash("User " + user.username + " has been promuted!", category='success')
-    return redirect(url_for('users.index'))
+# @users.route('/user/promute/<int:user_id>', methods=['GET', 'POST'])
+# @login_required
+# def promute(user_id):
+#     user = User.query.get(user_id)
+#     if request.method == 'POST':
+#         user.promute = True
+#         db.session.commit()
+#         flash("User " + user.username + " has been promuted!", category='success')
+#     return redirect(url_for('users.index'))
