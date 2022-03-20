@@ -37,7 +37,7 @@ def create_post():
 
 
 # Update a post
-views.route('/post/update/<int:post_id>', methods=['GET', 'POST'])
+views.route('/update-post/<int:post_id>', methods=['GET', 'POST'])
 @login_required
 def update_post(post_id):
     post = Post.query.get(post_id)
