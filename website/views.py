@@ -37,7 +37,7 @@ def create_post():
 
 
 # Update a post
-views.route('/update-post/<int:post_id>', methods=['GET', 'POST'])
+views.route('/post/update/<int:post_id>', methods=['GET', 'POST'])
 @login_required
 def update_post(post_id):
     post = Post.query.get(post_id)
@@ -49,7 +49,7 @@ def update_post(post_id):
             db.session.commit() # Refresh the database
             flash("Post updated!", category='success')
             return redirect(url_for('views.home')) # Redirection to the home page
-    return render_template("update_post.html", user=current_user, post=post) # Print the update post html page
+    return render_template('update_post.html', user=current_user, post=post) # Print the update post html page
 
 
 # Delete a post
