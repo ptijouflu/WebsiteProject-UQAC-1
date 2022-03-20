@@ -35,7 +35,7 @@
               ></button>
               <ul class="dropdown-menu">
                 <li>
-                  <a href="/post/update/{{post.id}}" class="dropdown-item">Update</a>
+                  <a href="{{url_for('views.update_post', post_id=post.id)}}" class="dropdown-item">Update</a>
                   <a href="/post/delete/{{post.id}}" class="dropdown-item">Delete</a>
                 </li>
               </ul>
